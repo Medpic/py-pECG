@@ -18,7 +18,6 @@ repos:
     args: ['--fix=auto']
   - id: no-commit-to-branch
     args: ['--branch', 'main']
-    exclude: (?i)(CI)
 
 - repo: https://github.com/PyCQA/autoflake
   rev: v1.6.0

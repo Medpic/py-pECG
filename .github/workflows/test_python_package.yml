@@ -29,13 +29,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install .
 
-    - name: Set CI environment variable
-      run: echo "CI=true" >> $GITHUB_ENV
-
     - name: Run pre-commit hooks
       run: |
         pip install pre-commit
-        SKIP=no-commit-to-branch pre-commit run --all-files
+        echo "SKIP=no-commit-to-branch" >> $GITHUB_ENV
+        pre-commit run --all-files
 
     - name: Run tests with pytest
       run: |

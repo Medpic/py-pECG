@@ -32,11 +32,13 @@ jobs:
     - name: Run pre-commit hooks on Ubuntu and macOS
       if: runner.os != 'Windows'
       run: |
+        pip install pre-commit
         SKIP=no-commit-to-branch pre-commit run --all-files
 
     - name: Run pre-commit hooks on Windows
       if: runner.os == 'Windows'
       run: |
+        pip install pre-commit
         set SKIP=no-commit-to-branch
         pre-commit run --all-files
 

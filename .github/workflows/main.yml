@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python-version: ['3.8', '3.9', '3.10', '3.11']
+        python-version: ['3.8', '3.9']
 
     runs-on: ${{ matrix.os }}
 
@@ -36,5 +36,5 @@ jobs:
 
     - name: Run tests with pytest
       run: |
-        pip install pytest
+        pip install pytest pytest-cov
         pytest

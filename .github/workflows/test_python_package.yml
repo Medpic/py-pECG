@@ -29,10 +29,17 @@ jobs:
         python -m pip install --upgrade pip
         pip install .
 
-    - name: Run pre-commit hooks
+    - name: Run pre-commit hooks on Ubuntu and macOS
+      if: runner.os != 'Windows'
       run: |
         pip install pre-commit
-        pre-commit run --all-files
+        SKIP=no-commit-to-branch pre-commit run --all-files
+
+    - name: Run pre-commit hooks on Windows
+      if: runner.os == 'Windows'
+      run: |
+        pip install pre-commit
+        $env:SKIP="no-commit-to-branch"; pre-commit run --all-files
 
     - name: Run tests with pytest
       run: |

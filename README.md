@@ -1,5 +1,5 @@
-# Label Tree
-A minimal client to access the label tree across BeatBoxAI applications
+# py-pECG
+A pure python implementation of the pECG wavdet fiducial-points detector
 
 ## Installation
 Installation with pip from GitHub:

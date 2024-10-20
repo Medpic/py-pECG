@@ -1,7 +1,8 @@
 import numpy as np
 import pytest
-from Subfunction_Module import searchon
 from scipy.signal.windows import triang
+
+from Subfunction_Module import searchon
 
 
 def test_searchon():

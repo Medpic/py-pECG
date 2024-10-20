@@ -330,3 +330,4 @@ def modmax(
         [indexes, aux_idx] = np.sort(indexes)
 
     return indexes
+

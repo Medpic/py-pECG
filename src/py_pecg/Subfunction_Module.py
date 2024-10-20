@@ -13,8 +13,10 @@ def buscamin(x: np.ndarray) -> int:
         ind (int): The first index in x for which the first minimum is located.
 
     Credits:
-        Original authors: Juan Pablo Martínez, Rute Almeida, Salvador Olmos, Ana Paula Rocha, Pablo Laguna
-        Original Publication: A wavelet-based ECG delineator: evaluation on standard databases
+        Original authors: Juan Pablo Martínez, Rute Almeida, Salvador Olmos,
+        Ana Paula Rocha, Pablo Laguna
+        Original Publication: A wavelet-based ECG delineator: 
+        evaluation on standard databases
         Original DOI: 10.1109/TBME.2003.821031.
     """
     x = np.abs(x)
@@ -36,8 +38,10 @@ def searchon(piconset: int, sig: np.ndarray, K: float) -> int:
         onset (int): Resultant index of the wave onset.
 
     Credits:
-        Original authors: Juan Pablo Martínez, Rute Almeida, Salvador Olmos, Ana Paula Rocha, Pablo Laguna
-        Original Publication: A wavelet-based ECG delineator: evaluation on standard databases
+        Original authors: Juan Pablo Martínez, Rute Almeida, Salvador Olmos,
+        Ana Paula Rocha, Pablo Laguna
+        Original Publication: A wavelet-based ECG delineator: 
+        evaluation on standard databases
         Original DOI: 10.1109/TBME.2003.821031.
     """
     if K == 0:
@@ -56,7 +60,7 @@ def searchon(piconset: int, sig: np.ndarray, K: float) -> int:
     else:
         maxderon = abs(sig[-1])
 
-        ### Maximum Derivative
+        # Maximum Derivative
         ind1 = (
             min(np.argwhere(abs(np.flipud(sig[0:-1])) < maxderon / K))
             if np.any(abs(np.flipud(sig[0:-2])) < maxderon / K)
@@ -90,8 +94,10 @@ def searchoff(picoffset: int, sig: np.ndarray, K: float) -> int:
         offset (int): Resultant index of the wave offset.
 
     Credits:
-        Original authors: Juan Pablo Martínez, Rute Almeida, Salvador Olmos, Ana Paula Rocha, Pablo Laguna
-        Original Publication: A wavelet-based ECG delineator: evaluation on standard databases
+        Original authors: Juan Pablo Martínez, Rute Almeida, Salvador Olmos,
+        Ana Paula Rocha, Pablo Laguna
+        Original Publication: A wavelet-based ECG delineator: 
+        evaluation on standard databases
         Original DOI: 10.1109/TBME.2003.821031.
     """
     if K == 0:
@@ -111,7 +117,7 @@ def searchoff(picoffset: int, sig: np.ndarray, K: float) -> int:
 
         maxderoff = abs(sig[0])
 
-        ### maximum derivative
+        # maximum derivative
         ind1 = (
             min(np.argwhere(abs(sig[1:]) < maxderoff / K))
             if np.any((abs(sig[1:])) < maxderoff / K)
@@ -143,8 +149,10 @@ def picant(sig: np.ndarray, time: int) -> int:
         pa (int): Index of the maximum in the target signal.
 
     Credits:
-        Original authors: Juan Pablo Martínez, Rute Almeida, Salvador Olmos, Ana Paula Rocha, Pablo Laguna
-        Original Publication: A wavelet-based ECG delineator: evaluation on standard databases
+        Original authors: Juan Pablo Martínez, Rute Almeida, Salvador Olmos,
+        Ana Paula Rocha, Pablo Laguna
+        Original Publication: A wavelet-based ECG delineator: 
+        evaluation on standard databases
         Original DOI: 10.1109/TBME.2003.821031.
     """
     if sig.ndim > 1 and sig.shape[0] > 1 and sig.shape[1] > 1:
@@ -177,8 +185,10 @@ def picpost(sig: np.ndarray, time: int) -> int:
         pp (int): Index of the maximum in the target signal.
 
     Credits:
-        Original authors: Juan Pablo Martínez, Rute Almeida, Salvador Olmos, Ana Paula Rocha, Pablo Laguna
-        Original Publication: A wavelet-based ECG delineator: evaluation on standard databases
+        Original authors: Juan Pablo Martínez, Rute Almeida, Salvador Olmos,
+        Ana Paula Rocha, Pablo Laguna
+        Original Publication: A wavelet-based ECG delineator: 
+        evaluation on standard databases
         Original DOI: 10.1109/TBME.2003.821031.
     """
     if sig.ndim > 1 and sig.shape[0] > 1 and sig.shape[1] > 1:
@@ -210,8 +220,10 @@ def zerocros(x: np.ndarray) -> int:
         index (int): The first index in which zero crossing occurs.
 
     Credits:
-        Original authors: Juan Pablo Martínez, Rute Almeida, Salvador Olmos, Ana Paula Rocha, Pablo Laguna
-        Original Publication: A wavelet-based ECG delineator: evaluation on standard databases
+        Original authors: Juan Pablo Martínez, Rute Almeida, Salvador Olmos,
+        Ana Paula Rocha, Pablo Laguna
+        Original Publication: A wavelet-based ECG delineator: 
+        evaluation on standard databases
         Original DOI: 10.1109/TBME.2003.821031.
     """
     if x.ndim > 1 and x.shape[0] > 1 and x.shape[1] > 1:
@@ -253,8 +265,10 @@ def modmax(
         indexes (np.ndarray): The indices of the modulus maxima.
 
     Credits:
-        Original authors: Juan Pablo Martínez, Rute Almeida, Salvador Olmos, Ana Paula Rocha, Pablo Laguna
-        Original Publication: A wavelet-based ECG delineator: evaluation on standard databases
+        Original authors: Juan Pablo Martínez, Rute Almeida, Salvador Olmos,
+        Ana Paula Rocha, Pablo Laguna
+        Original Publication: A wavelet-based ECG delineator: 
+        evaluation on standard databases
         Original DOI: 10.1109/TBME.2003.821031.
     """
     if x.ndim > 1 and x.shape[0] > 1 and x.shape[1] > 1:

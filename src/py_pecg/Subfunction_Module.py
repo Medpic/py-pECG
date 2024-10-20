@@ -330,4 +330,7 @@ def modmax(
         [indexes, aux_idx] = np.sort(indexes)
 
     return indexes
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes

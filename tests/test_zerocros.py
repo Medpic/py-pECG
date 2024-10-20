@@ -27,4 +27,3 @@ def test_zerocros():
         zerocros(np.array([]))    
         
 test_zerocros()
-

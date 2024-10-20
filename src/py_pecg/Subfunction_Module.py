@@ -15,7 +15,7 @@ def buscamin(x: np.ndarray) -> int:
     Credits:
         Original authors: Juan Pablo Martínez, Rute Almeida, Salvador Olmos,
         Ana Paula Rocha, Pablo Laguna
-        Original Publication: A wavelet-based ECG delineator: 
+        Original Publication: A wavelet-based ECG delineator:
         evaluation on standard databases
         Original DOI: 10.1109/TBME.2003.821031.
     """
@@ -40,7 +40,7 @@ def searchon(piconset: int, sig: np.ndarray, K: float) -> int:
     Credits:
         Original authors: Juan Pablo Martínez, Rute Almeida, Salvador Olmos,
         Ana Paula Rocha, Pablo Laguna
-        Original Publication: A wavelet-based ECG delineator: 
+        Original Publication: A wavelet-based ECG delineator:
         evaluation on standard databases
         Original DOI: 10.1109/TBME.2003.821031.
     """
@@ -96,7 +96,7 @@ def searchoff(picoffset: int, sig: np.ndarray, K: float) -> int:
     Credits:
         Original authors: Juan Pablo Martínez, Rute Almeida, Salvador Olmos,
         Ana Paula Rocha, Pablo Laguna
-        Original Publication: A wavelet-based ECG delineator: 
+        Original Publication: A wavelet-based ECG delineator:
         evaluation on standard databases
         Original DOI: 10.1109/TBME.2003.821031.
     """
@@ -151,7 +151,7 @@ def picant(sig: np.ndarray, time: int) -> int:
     Credits:
         Original authors: Juan Pablo Martínez, Rute Almeida, Salvador Olmos,
         Ana Paula Rocha, Pablo Laguna
-        Original Publication: A wavelet-based ECG delineator: 
+        Original Publication: A wavelet-based ECG delineator:
         evaluation on standard databases
         Original DOI: 10.1109/TBME.2003.821031.
     """
@@ -165,7 +165,7 @@ def picant(sig: np.ndarray, time: int) -> int:
         raise ValueError("Input an array which is not empty.")
     if time < 0:
         raise ValueError("Input a non-negative time.")
-    
+
     sig = np.flipud(sig)
     der = np.diff(sig)
     cero = min(np.argwhere((der[0:-1] * der[1:] <= 0)))
@@ -187,7 +187,7 @@ def picpost(sig: np.ndarray, time: int) -> int:
     Credits:
         Original authors: Juan Pablo Martínez, Rute Almeida, Salvador Olmos,
         Ana Paula Rocha, Pablo Laguna
-        Original Publication: A wavelet-based ECG delineator: 
+        Original Publication: A wavelet-based ECG delineator:
         evaluation on standard databases
         Original DOI: 10.1109/TBME.2003.821031.
     """
@@ -201,7 +201,7 @@ def picpost(sig: np.ndarray, time: int) -> int:
         raise ValueError("Input an array which is not empty.")
     if time < 0:
         raise ValueError("Input a non-negative time.")
-        
+
     der = np.diff(sig)
     cero = min(np.argwhere((der[0:-2] * der[1:-1] <= 0)))
     pp = time + cero + 1
@@ -222,7 +222,7 @@ def zerocros(x: np.ndarray) -> int:
     Credits:
         Original authors: Juan Pablo Martínez, Rute Almeida, Salvador Olmos,
         Ana Paula Rocha, Pablo Laguna
-        Original Publication: A wavelet-based ECG delineator: 
+        Original Publication: A wavelet-based ECG delineator:
         evaluation on standard databases
         Original DOI: 10.1109/TBME.2003.821031.
     """
@@ -267,7 +267,7 @@ def modmax(
     Credits:
         Original authors: Juan Pablo Martínez, Rute Almeida, Salvador Olmos,
         Ana Paula Rocha, Pablo Laguna
-        Original Publication: A wavelet-based ECG delineator: 
+        Original Publication: A wavelet-based ECG delineator:
         evaluation on standard databases
         Original DOI: 10.1109/TBME.2003.821031.
     """
@@ -281,7 +281,7 @@ def modmax(
         raise ValueError("Input an array which is not empty.")
     if first_samp < 0:
         raise ValueError("Input a non-negative first_samp.")
-        
+
     lx = len(x) - 1
     indexes = []
     max_mod = []
@@ -330,7 +330,3 @@ def modmax(
         [indexes, aux_idx] = np.sort(indexes)
 
     return indexes
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes

@@ -1,7 +1,7 @@
-import numpy as np
+import numpy as np  # pragma: no cover
 
 
-def buscamin(x: np.ndarray) -> int:
+def buscamin(x: np.ndarray,) -> int: 
     """
     This function searches the first local minimum of the modulus of an array x,
     While truncating the edges (First and Final Indices).
@@ -19,6 +19,12 @@ def buscamin(x: np.ndarray) -> int:
         evaluation on standard databases
         Original DOI: 10.1109/TBME.2003.821031.
     """
+    if x.ndim > 2:
+        raise ValueError("Input is a higher-dimensional array, not a vector.")
+
+    elif x.ndim == 2 and (x.shape[0] > 1 and x.shape[1] > 1):
+        raise ValueError("Input is a matrix, not a row or column vector.")
+
     x = np.abs(x)
     localmin = (x[1:-1] <= x[:-2]) & (x[1:-1] <= x[2:])
     ind = np.argmax(localmin)
@@ -47,12 +53,11 @@ def searchon(piconset: int, sig: np.ndarray, K: float) -> int:
     if K == 0:
         raise ZeroDivisionError("K cannot be zero!")
 
-    if sig.ndim > 1 and sig.shape[0] > 1 and sig.shape[1] > 1:
-        raise ValueError(
-            "Input is a matrix or higher-dimensional array, not a row or column vector."
-        )
-    elif sig.ndim > 2:
+    if sig.ndim > 2:
         raise ValueError("Input is a higher-dimensional array, not a vector.")
+
+    elif sig.ndim == 2 and (sig.shape[0] > 1 and sig.shape[1] > 1):
+        raise ValueError("Input is a matrix, not a row or column vector.")
 
     if piconset.size == 0 or sig.size == 0:
         onset = []
@@ -103,12 +108,11 @@ def searchoff(picoffset: int, sig: np.ndarray, K: float) -> int:
     if K == 0:
         raise ZeroDivisionError("K cannot be zero!")
 
-    if sig.ndim > 1 and sig.shape[0] > 1 and sig.shape[1] > 1:
-        raise ValueError(
-            "Input is a matrix or higher-dimensional array, not a row or column vector."
-        )
-    elif sig.ndim > 2:
+    if sig.ndim > 2:
         raise ValueError("Input is a higher-dimensional array, not a vector.")
+
+    elif sig.ndim == 2 and (sig.shape[0] > 1 and sig.shape[1] > 1):
+        raise ValueError("Input is a matrix, not a row or column vector.")
 
     if picoffset.size == 0 or sig.size == 0:
         offset = []
@@ -155,12 +159,11 @@ def picant(sig: np.ndarray, time: int) -> int:
         evaluation on standard databases
         Original DOI: 10.1109/TBME.2003.821031.
     """
-    if sig.ndim > 1 and sig.shape[0] > 1 and sig.shape[1] > 1:
-        raise ValueError(
-            "Input is a matrix or higher-dimensional array, not a row or column vector."
-        )
-    elif sig.ndim > 2:
+    if sig.ndim > 2:
         raise ValueError("Input is a higher-dimensional array, not a vector.")
+
+    elif sig.ndim == 2 and (sig.shape[0] > 1 and sig.shape[1] > 1):
+        raise ValueError("Input is a matrix, not a row or column vector.")
     elif sig.size == 0:
         raise ValueError("Input an array which is not empty.")
     if time < 0:
@@ -191,17 +194,15 @@ def picpost(sig: np.ndarray, time: int) -> int:
         evaluation on standard databases
         Original DOI: 10.1109/TBME.2003.821031.
     """
-    if sig.ndim > 1 and sig.shape[0] > 1 and sig.shape[1] > 1:
-        raise ValueError(
-            "Input is a matrix or higher-dimensional array, not a row or column vector."
-        )
-    elif sig.ndim > 2:
+    if sig.ndim > 2:
         raise ValueError("Input is a higher-dimensional array, not a vector.")
+
+    elif sig.ndim == 2 and (sig.shape[0] > 1 and sig.shape[1] > 1):
+        raise ValueError("Input is a matrix, not a row or column vector.")
     elif sig.size == 0:
         raise ValueError("Input an array which is not empty.")
     if time < 0:
         raise ValueError("Input a non-negative time.")
-
     der = np.diff(sig)
     cero = min(np.argwhere((der[0:-2] * der[1:-1] <= 0)))
     pp = time + cero + 1
@@ -226,12 +227,11 @@ def zerocros(x: np.ndarray) -> int:
         evaluation on standard databases
         Original DOI: 10.1109/TBME.2003.821031.
     """
-    if x.ndim > 1 and x.shape[0] > 1 and x.shape[1] > 1:
-        raise ValueError(
-            "Input is a matrix or higher-dimensional array, not a row or column vector."
-        )
-    elif x.ndim > 2:
+    if x.ndim > 2:
         raise ValueError("Input is a higher-dimensional array, not a vector.")
+
+    elif x.ndim == 2 and (x.shape[0] > 1 and x.shape[1] > 1):
+        raise ValueError("Input is a matrix, not a row or column vector.")
     elif x.size == 0:
         raise ValueError("Input an array which is not empty.")
 
@@ -271,12 +271,11 @@ def modmax(
         evaluation on standard databases
         Original DOI: 10.1109/TBME.2003.821031.
     """
-    if x.ndim > 1 and x.shape[0] > 1 and x.shape[1] > 1:
-        raise ValueError(
-            "Input is a matrix or higher-dimensional array, not a row or column vector."
-        )
-    elif x.ndim > 2:
+    if x.ndim > 2:
         raise ValueError("Input is a higher-dimensional array, not a vector.")
+
+    elif x.ndim == 2 and (x.shape[0] > 1 and x.shape[1] > 1):
+        raise ValueError("Input is a matrix, not a row or column vector.")
     elif x.size == 0:
         raise ValueError("Input an array which is not empty.")
     if first_samp < 0:
@@ -284,14 +283,10 @@ def modmax(
 
     lx = len(x) - 1
     indexes = []
-    max_mod = []
     first_samp = int(first_samp)
 
     if np.size(first_samp) < 2:
         first_samp = [max(1, first_samp), lx]
-    else:
-        first_samp[0] = max(1, first_samp[0])
-        first_samp[1] = min(lx, first_samp[1])
 
     if lx > first_samp[0]:
         s = np.sign(x)
@@ -312,21 +307,8 @@ def modmax(
         iAux = np.zeros_like(x, dtype=bool)
         iAux[sample_curr_idx] = localmax
         indexes = np.argwhere(iAux)
-        max_mod = x[indexes] * s[indexes]
 
     else:
         return np.array([])
-
-    lindexes = len(indexes)
-    n_greater = lindexes
-
-    if n_greater < lindexes:
-
-        [_, aux_idx] = np.argsort(np.abs(max_mod))[::-1]
-
-        indexes = indexes(aux_idx[0:n_greater])
-        max_mod = max_mod(aux_idx[0:n_greater])
-
-        [indexes, aux_idx] = np.sort(indexes)
 
     return indexes

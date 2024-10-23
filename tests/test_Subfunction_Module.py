@@ -2,7 +2,7 @@ import numpy as np  # pragma: no cover
 import pytest  # pragma: no cover
 from scipy.signal.windows import triang  # pragma: no cover
 
-from Subfunction_Module import (
+from py_pecg.Subfunction_Module import (  # pragma: no cover
     buscamin,
     modmax,
     picant,
@@ -10,7 +10,7 @@ from Subfunction_Module import (
     searchoff,
     searchon,
     zerocros,
-)  # pragma: no cover
+)
 
 
 @pytest.mark.buscamin_testmarker
@@ -24,13 +24,9 @@ def test_buscamin():
     Test_Signal_1 = np.zeros(10, dtype=int)
     assert buscamin(Test_Signal_1) == 0
     Test_Signal_2 = np.linspace(1, 10, 10)
-    assert (
-        buscamin(Test_Signal_2) == 0
-    )  # No local minimum, only global minimum
+    assert buscamin(Test_Signal_2) == 0  # No local minimum, only global minimum
     Test_Signal_3 = np.linspace(10, 1, 10)
-    assert (
-        buscamin(Test_Signal_3) == 0
-    )  # No local minimum, only global minimum
+    assert buscamin(Test_Signal_3) == 0  # No local minimum, only global minimum
     Test_Signal_4 = (np.linspace(-5, 5, 11)) ** 2
     assert buscamin(Test_Signal_4) == 4  # Parabolic Signal
 

@@ -314,13 +314,6 @@ if __name__ == "__main__":
         [
             "--cov=Subfunction_Module",
             "--cov-report=term-missing",
-            # "-k buscamin_testmarker",
-            # "-k searchon_testmarker",
-            # "-k searchoff_testmarker",
-            # "-k picant_testmarker",
-            # "-k picpost_testmarker",
-            # "-k zerocros_testmarker",
-            # "-k modmax_testmarker",
             "--disable-warnings",
             "test_Subfunction_Module.py",
         ]

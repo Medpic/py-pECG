@@ -1,7 +1,9 @@
 import numpy as np  # pragma: no cover
 
 
-def buscamin(x: np.ndarray,) -> int: 
+def buscamin(
+    x: np.ndarray,
+) -> int:
     """
     This function searches the first local minimum of the modulus of an array x,
     While truncating the edges (First and Final Indices).

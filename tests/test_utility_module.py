@@ -2,9 +2,15 @@ import numpy as np
 import pytest
 from scipy.signal.windows import triang
 
-from utility_module import (find_first_peak, find_first_zero_crossing,
-                            find_last_peak, find_local_modulus_minimum,
-                            find_modulus_extrema, search_offset, search_onset)
+from utility_module import (
+    find_first_peak,
+    find_first_zero_crossing,
+    find_last_peak,
+    find_local_modulus_minimum,
+    find_modulus_extrema,
+    search_offset,
+    search_onset,
+)
 
 
 def test_find_local_modulus_minimum():
@@ -81,7 +87,7 @@ def test_search_onset(modified_triangular_pulse, setup_for_onset_and_offset):
 def test_search_offset(modified_triangular_pulse, setup_for_onset_and_offset):
     # Valid Cases
     assert search_offset(np.int64(30), modified_triangular_pulse, 1) == 39
-    assert search_offset(np.int64(0), np.ones(10), 0.1) == 9  #  Flat Signal
+    assert search_offset(np.int64(0), np.ones(10), 0.1) == 9  # Flat Signal
     return
 
 

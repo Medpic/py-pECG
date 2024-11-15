@@ -1,0 +1,1 @@
+{"setup": {"wavedet": {"filter_bank_design": 0, "QRS_detection_only": false, "QRS_detection_thr": [[1.0], [1.0], [1.0], [1.0], [1.0]], "sig_quality": 2, "qrs_flag": 0, "leadsynth_flag": 0, "flagaux": 0, "freq": 500, "nsamp": 131072}}, "errors": {}, "errors_desc": {}, "warnings": [], "status": 1}

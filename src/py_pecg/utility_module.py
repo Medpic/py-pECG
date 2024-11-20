@@ -65,9 +65,7 @@ def search_onset_or_offset(
     if signal.squeeze().ndim > 1:
         raise ValueError("Input is a higher-dimensional array, not a vector.")
     if not (flag == "Onset" or flag == "Offset"):
-        raise ValueError(
-            "Flag must match either an Onset search or an Offset search!"
-        )
+        raise ValueError("Flag must match either an Onset search or an Offset search!")
 
     else:
         if flag == "Onset":
@@ -84,9 +82,7 @@ def search_onset_or_offset(
             onset_factor = 0
             offset_factor = 1
 
-        ind1 = np.where(
-            abs(processed_signal) < max_derivative / set_threshold
-        )[0]
+        ind1 = np.where(abs(processed_signal) < max_derivative / set_threshold)[0]
 
         if ind1.size != 0:
             ind1 = ind1[0]
@@ -99,15 +95,11 @@ def search_onset_or_offset(
             )
         elif not ind1:
             set_index = (
-                search_index
-                - onset_factor * (ind2 + 1)
-                + offset_factor * (ind2)
+                search_index - onset_factor * (ind2 + 1) + offset_factor * (ind2)
             )
         elif not ind2:
             set_index = (
-                search_index
-                - onset_factor * (ind1 + 1)
-                + offset_factor * (ind1)
+                search_index - onset_factor * (ind1 + 1) + offset_factor * (ind1)
             )
         else:
             set_index = search_index + (offset_factor - onset_factor) * (

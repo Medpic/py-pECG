@@ -3,19 +3,18 @@ from scipy.signal import firls, lfilter
 
 
 def interp(idata: np.ndarray, r: int, n: int, cutoff: float) -> np.ndarray:
-    """
-    Resample data at a higher rate using lowpass interpolation.
-    Resamples the sequence in vector X at R times the original sample rate.
-    The resulting resampled vector Y is R times longer, LENGTH(Y) = R*LENGTH(X).
-    A symmetric filter, B, allows the original data to pass through
-    unchanged and interpolates between so that the mean square error
-    between them and their ideal values is minimized.
+    """Resample data at a higher rate using lowpass interpolation. Resamples the
+    sequence in vector X at R times the original sample rate. The resulting resampled
+    vector Y is R times longer, LENGTH(Y) = R*LENGTH(X). A symmetric filter, B, allows
+    the original data to pass through unchanged and interpolates between so that the
+    mean square error between them and their ideal values is minimized.
 
     Args:
         idata (np.ndarray): The target signal designated for interpolation.
         r (int): The interpolation factor of the resulting resampled vector.
-        n (int): Half the number of original sample values used to perform the interpolation.
-                 For best results, use N no larger than 10. The length of B is 2*N*R+1.
+        n (int): Half the number of original sample values used to perform the
+        interpolation. For best results, use N no larger than 10. The length of
+         B is 2*N*R+1.
         cutoff (float): Cutoff Frequency. The signal is assumed to be band
                         limited with cutoff frequency 0 < CUTOFF <= 1.0.
 
@@ -44,13 +43,13 @@ def interp(idata: np.ndarray, r: int, n: int, cutoff: float) -> np.ndarray:
     """
 
     def designInterpFilt(r: int, n: int, alpha: float) -> np.ndarray:
-        """
-        This function designs a linear-phase FIR filter of type I for interpolation.
+        """This function designs a linear-phase FIR filter of type I for interpolation.
 
         Args:
             r (int): The interpolation factor of the resulting resampled vector.
-            n (int): Half the number of original sample values used to perform the interpolation.
-            alpha (float): Variation of the cutoff frequency specification.
+            n (int): Half the number of original sample values used to perform the
+            interpolation. alpha (float): Variation of the cutoff frequency
+            specification.
 
         Returns:
             b (TYPE): The resultant interpolation filter coefficients.
@@ -61,9 +60,7 @@ def interp(idata: np.ndarray, r: int, n: int, cutoff: float) -> np.ndarray:
             F = np.array([0, 1 / (2 * r), 1 / (2 * r), 0.5])
         else:
             Nband = int((np.floor(0.5 * r)))
-            M = np.concatenate(
-                (np.array([r, r]), np.zeros((1, 2 * Nband)).flatten())
-            )
+            M = np.concatenate((np.array([r, r]), np.zeros((1, 2 * Nband)).flatten()))
             a2r = alpha / 2 / r
             F = np.zeros((1, 2 * Nband + 2)).flatten()
             F[1] = a2r
@@ -128,9 +125,7 @@ def interp(idata: np.ndarray, r: int, n: int, cutoff: float) -> np.ndarray:
     # Check if filter length before interpolation is smaller than input length
     Lx = len(xCol)
     if not (2 * n + 1 < Lx):
-        raise ValueError(
-            "signal:interp:InvalidDimensions: 2*n + 1 must be < Lx"
-        )
+        raise ValueError("signal:interp:InvalidDimensions: 2*n + 1 must be < Lx")
 
     # constant values used for indexing and setting vector sizes
     RL = int(r * Lx)
@@ -142,9 +137,7 @@ def interp(idata: np.ndarray, r: int, n: int, cutoff: float) -> np.ndarray:
     # Use the filter B to perform the interpolation
     odt = np.zeros_like(xCol[0]).flatten()
     yCol = np.zeros((RL, 1), dtype=odt.dtype).flatten()
-    temp_indices = np.arange(
-        0, RL, int(r)
-    )  # Create indices 0, r, 2r, ..., up to RL-1
+    temp_indices = np.arange(0, RL, int(r))  # Create indices 0, r, 2r, ..., up to RL-1
     yCol[temp_indices] = xCol
 
     # Filter a fabricated section of data
@@ -192,10 +185,9 @@ Credits:
 
 
 def quadratic_splines_filterbank(fs: float, messages: dict):
-    """
-    Obtains the quadratic splines wavelet filterbank filters from
-    scale 1 to 4 as a function of the sampling frequency, in order to use filters
-    with similar analog frequency behaviour for diferent sampling frecuencies.
+    """Obtains the quadratic splines wavelet filterbank filters from scale 1 to 4 as a
+    function of the sampling frequency, in order to use filters with similar analog
+    frequency behaviour for diferent sampling frecuencies.
 
     Args:
         fs (float): Sampling frequency of the target signal.
@@ -223,18 +215,18 @@ def quadratic_splines_filterbank(fs: float, messages: dict):
 
     if not isinstance(fs, (int, float)) or isinstance(fs, bool):
         raise ValueError(
-            "Input must be a scalar integer or float, not an array or higher-dimensional object."
+            "Input must be a scalar integer or float, not "
+            "an array or higher-dimensional object."
         )
 
     if not ((fs == 500) or (fs == 1000) or (fs == 360) or (fs == 200)):
-        raise ValueError(
-            "Sampling Frequency must be either 200, 360, 500 or 1000."
-        )
+        raise ValueError("Sampling Frequency must be either 200, 360, 500 or 1000.")
         messages["errors"].append(
             "There are no wavelets designed for this sampling frequency."
         )
         messages["errors_desc"].append(
-            "Default wavelet filters not defined for thia samplig frequency. Use filter design instead."
+            "Default wavelet filters not defined for thia samplig frequency."
+            " Use filter design instead."
         )
         messages["status"] = 0
 
@@ -244,12 +236,8 @@ def quadratic_splines_filterbank(fs: float, messages: dict):
         return np.kron(base_filter, np.array([1] + [0] * zeros_count))
 
     def apply_interpolation(quadratic_filter_array, interp_params):
-        for i, (filt, params) in enumerate(
-            zip(quadratic_filter_array, interp_params)
-        ):
-            if (
-                params is False
-            ):  # Skip interpolation for this filter if params is False
+        for i, (filt, params) in enumerate(zip(quadratic_filter_array, interp_params)):
+            if params is False:  # Skip interpolation for this filter if params is False
                 continue
             step, zero_count, fill_value = params
             quadratic_filter_array[i], _ = interp(
@@ -275,9 +263,7 @@ def quadratic_splines_filterbank(fs: float, messages: dict):
             np.convolve(hpf_filters[0], hpf_filters[1]), lpf_filters[2]
         ),  # quadratic_filt_3
         np.convolve(
-            np.convolve(
-                np.convolve(hpf_filters[0], hpf_filters[1]), hpf_filters[2]
-            ),
+            np.convolve(np.convolve(hpf_filters[0], hpf_filters[1]), hpf_filters[2]),
             lpf_filters[3],
         ),  # quadratic_filt_4
         np.convolve(
@@ -291,12 +277,10 @@ def quadratic_splines_filterbank(fs: float, messages: dict):
         ),  # quadratic_filt_5
     ]
     # Filter Truncation
-    filter_lengths = [
-        max(np.argwhere(filt != 0)) for filt in quadratic_filter_array
-    ]
+    filter_lengths = [max(np.argwhere(filt != 0)) for filt in quadratic_filter_array]
     for i, filt in enumerate(quadratic_filter_array):
-        l = filter_lengths[i][0]
-        quadratic_filter_array[i] = np.transpose(filt[: l + 1])
+        length = filter_lengths[i][0]
+        quadratic_filter_array[i] = np.transpose(filt[: length + 1])
 
     if fs == 500:
         # Interpolate by 2
@@ -369,9 +353,8 @@ def wavelet_transform(
     signal: np.ndarray,
     quadratic_filter_array: np.ndarray,
 ) -> np.ndarray:
-    """
-    Calculates the wavelet transform of a signal using quadratic spline wavelet.
-    It calculates wavelets in scales of 1 to 4.
+    """Calculates the wavelet transform of a signal using quadratic spline wavelet. It
+    calculates wavelets in scales of 1 to 4.
 
     Args:
         signal (np.ndarray): The target signal designated for filtering.
@@ -385,9 +368,7 @@ def wavelet_transform(
     if not isinstance(quadratic_filter_array, list) or any(
         arr.size == 0 for arr in quadratic_filter_array
     ):
-        raise ValueError(
-            "quadratic_filter_array should be a list of 1D numpy arrays."
-        )
+        raise ValueError("quadratic_filter_array should be a list of 1D numpy arrays.")
     if signal.squeeze().ndim > 1 or any(
         not isinstance(arr, np.ndarray) or arr.ndim != 1
         for arr in quadratic_filter_array
@@ -401,21 +382,21 @@ def wavelet_transform(
 
 
 def create_filter(messages: dict) -> dict:
-    """
-    Creates quadratic spline filters using a variation on
-    Mallat's Algorithm, algorithme à trous.
+    """Creates quadratic spline filters using a variation on Mallat's Algorithm,
+    algorithme à trous.
 
     Args:
         messages (dict): Dictionary containing information relevant to the algorithm.
 
     Returns:
-        quadratic_filter_dictionary (dict): A dictionary relevant to the algorithm filter-bank.
+        quadratic_filter_dictionary (dict): A dictionary relevant to the algorithm
+        filter-bank.
     """
     quadratic_filter_array, messages = quadratic_splines_filterbank(
         messages["setup"]["wavedet"]["freq"], messages
     )
     lengths = [len(q) for q in quadratic_filter_array]
-    decimation_values = [int(np.floor((l - 1) / 2)) for l in lengths]
+    decimation_values = [int(np.floor((length - 1) / 2)) for length in lengths]
     quadratic_filter_dictionary = {
         "filters": quadratic_filter_array,
         "lengths": lengths,
@@ -433,16 +414,18 @@ def filter_segment_of_signal(
     signal_segment: np.ndarray,
     messages: dict,
 ):
-    """
-    Uses a Wavelet Transform on individual ECG signal excerpts, after
-    Generating quadratic-spline filter banks.
+    """Uses a Wavelet Transform on individual ECG signal excerpts, after Generating
+    quadratic-spline filter banks.
 
     Args:
-        quadratic_filter_dictionary (dict): A dictionary relevant to the algorithm filter-bank.
+        quadratic_filter_dictionary (dict): A dictionary relevant to the algorithm
+        filter-bank.
         current_samp (int): Current sample analyzed within the ECG signal.
         initial_samp (int): Initial sample analyzed within the ECG signal.
-        num_samps (int): Number of samples per excerpt for the filter bank corresponding to 2^16 samples at sf=250.
-        segment_boundaries (list): First and last indices analyzed within the ECG signal.
+        num_samps (int): Number of samples per excerpt for the filter bank
+        corresponding to 2^16 samples at sf=250.
+        segment_boundaries (list): First and last indices analyzed within the ECG
+        signal.
         signal_segment (np.ndarray): The ECG signal designated for analysis.
         messages (dict): Dictionary containing information relevant to the algorithm.
 
@@ -450,7 +433,8 @@ def filter_segment_of_signal(
         signal_segment (np.ndarray): The ECG signal designated for analysis.
         current_samp (int): Updated sample analyzed within the ECG signal.
         updated_samp (int): Updated current sample analyzed within the ECG signal.
-        synchronized_wavelet_matrix (np.ndarray): Wavelet Transform Matrix, relevant to the current segment of the signal.
+        synchronized_wavelet_matrix (np.ndarray): Wavelet Transform Matrix, relevant
+        to the current segment of the signal.
         threshold_matrix (np.ndarray): QRS detection threshold matrix.
         end_samp (int): Updated final sample analyzed within the ECG signal.
         initial_samp (int): Updated initial sample analyzed within the ECG signal.
@@ -479,7 +463,8 @@ def filter_segment_of_signal(
         ]
         if not quadratic_filter_array or not lengths or not decimation_values:
             raise ValueError(
-                "quadratic_filter_dictionary contains empty values for 'filters', 'lengths', or 'd_values'."
+                "quadratic_filter_dictionary contains empty values for "
+                "'filters', 'lengths', or 'd_values'."
             )
         return
 
@@ -522,16 +507,12 @@ def filter_segment_of_signal(
 
     # Filter bank - Wavelet Matrix construction and parameters setting
     l5 = lengths[-1]
-    wavelet_transform_matrix = wavelet_transform(
-        signal_segment, quadratic_filter_array
-    )
+    wavelet_transform_matrix = wavelet_transform(signal_segment, quadratic_filter_array)
     wavelet_transform_matrix = wavelet_transform_matrix[l5 - 1 :, 0:5]
 
     # Synchronizing filtered signals at different scales
     d5 = decimation_values[-1]
-    synchronized_wavelet_matrix = np.zeros(
-        (len(wavelet_transform_matrix) - d5, 5)
-    )
+    synchronized_wavelet_matrix = np.zeros((len(wavelet_transform_matrix) - d5, 5))
     for i, d in enumerate(decimation_values):
         synchronized_wavelet_matrix[:, i] = wavelet_transform_matrix[
             d : d + len(wavelet_transform_matrix) - d5, i

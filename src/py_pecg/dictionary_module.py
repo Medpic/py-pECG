@@ -2,22 +2,22 @@ from numpy import isscalar, nan, zeros
 
 
 def create_locations_dictionary(maxlength: int) -> dict:
-    """
-    Creates the "Location" dictionary, used for extracting ECG Parameters.
+    """Creates the "Location" dictionary, used for extracting ECG Parameters.
 
     Args:
         maxlength (int): Estimated maximum number of beats
         in the ECG signal excerpt.
 
     Returns:
-        locations (dict): Dictionary containing information relevant to the P, QRS and T intervals
-        in the ECG signal excerpt.
+        locations (dict): Dictionary containing information relevant to the
+        P, QRS and T intervals in the ECG signal excerpt.
 
     Credits:
-        Original authors: Juan Pablo Martínez, Rute Almeida, Salvador Olmos, Ana Paula Rocha, Pablo Laguna
-        Original Publication: A wavelet-based ECG delineator: evaluation on standard databases
+        Original authors: Juan Pablo Martínez, Rute Almeida, Salvador Olmos,
+        Ana Paula Rocha, Pablo Laguna
+        Original Publication: A wavelet-based ECG delineator: evaluation
+        on standard databases
         Original DOI: 10.1109/TBME.2003.821031.
-
     """
 
     if not isscalar(maxlength):

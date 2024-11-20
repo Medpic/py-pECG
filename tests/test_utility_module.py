@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from scipy.signal.windows import triang
 
-from utility_module import (
+from py_pecg.utility_module import (
     find_first_peak,
     find_first_zero_crossing,
     find_last_peak,
@@ -166,9 +166,7 @@ def test_find_modulus_extrema():
     assert find_modulus_extrema(test_signal_2, 0, 2, 1).size == 0
     assert find_modulus_extrema(test_signal_2, 0, 2, -1).size == 0
     assert find_modulus_extrema(test_signal_2, 0, 2, 0).size == 0
-    assert (
-        find_modulus_extrema(test_signal_2, len(test_signal_2), 2, 0).size == 0
-    )
+    assert find_modulus_extrema(test_signal_2, len(test_signal_2), 2, 0).size == 0
     assert np.array_equal(
         find_modulus_extrema(test_signal_2, 0, 0, 1),
         np.array(

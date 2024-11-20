@@ -4,7 +4,7 @@ from itertools import product
 import numpy as np
 import pytest
 
-from filtering_module import (
+from py_pecg.filtering_module import (
     create_filter,
     filter_segment_of_signal,
     interp,
@@ -34,9 +34,7 @@ def load_quadratic_filter_array():
 @pytest.fixture
 def load_quadratic_filter_dictionary():
     def load_for_frequency(frequency):
-        with open(
-            f"quadratic_filter_dictionary_{frequency}_Hz.json", "r"
-        ) as file:
+        with open(f"quadratic_filter_dictionary_{frequency}_Hz.json", "r") as file:
             loaded_file = json.load(file)
         return loaded_file
 
@@ -65,9 +63,7 @@ def test_interp():
     # Valid Cases
     # Row Vector and Column Vector Input
     for signal_length in range(5, 20, 5):
-        interpolation_factor_test(
-            np.linspace(0, signal_length, signal_length + 1)
-        )
+        interpolation_factor_test(np.linspace(0, signal_length, signal_length + 1))
         interpolation_factor_test(
             np.transpose(np.linspace(0, signal_length, signal_length + 1))
         )
@@ -138,9 +134,7 @@ def test_quadratic_splines_filterbank(load_quadratic_filter_array, messages):
 
 def test_wavelet_transform(load_quadratic_filter_array):
     def wavelet_subtest(signal, quadratic_filter_array):
-        wavelet_transform_matrix = wavelet_transform(
-            signal, quadratic_filter_array
-        )
+        wavelet_transform_matrix = wavelet_transform(signal, quadratic_filter_array)
         assert wavelet_transform_matrix.shape == (
             len(signal),
             len(quadratic_filter_array),
@@ -152,19 +146,13 @@ def test_wavelet_transform(load_quadratic_filter_array):
 
     # Valid Cases
     assert (
-        np.all(
-            wavelet_subtest(np.zeros((10, 1)), quadratic_filter_array_500_Hz)
-        )
-        == 0
+        np.all(wavelet_subtest(np.zeros((10, 1)), quadratic_filter_array_500_Hz)) == 0
     )  # Zero Signal
     assert not np.all(
-        wavelet_subtest(np.ones((10, 1)), quadratic_filter_array_500_Hz)[:, 0]
-        == 0
+        wavelet_subtest(np.ones((10, 1)), quadratic_filter_array_500_Hz)[:, 0] == 0
     )  # Const. Signal, Low Freq.
     assert np.allclose(
-        wavelet_subtest(np.ones((10, 1)), quadratic_filter_array_500_Hz)[
-            :, 1:
-        ],
+        wavelet_subtest(np.ones((10, 1)), quadratic_filter_array_500_Hz)[:, 1:],
         0,
         atol=1e-1,
     )  # Const. Signal, High Freq.
@@ -193,8 +181,7 @@ def test_create_filter(load_quadratic_filter_dictionary, messages):
         def convert_arrays_to_lists(data):
             if isinstance(data, dict):
                 return {
-                    key: convert_arrays_to_lists(value)
-                    for key, value in data.items()
+                    key: convert_arrays_to_lists(value) for key, value in data.items()
                 }
             elif isinstance(data, list):
                 return [convert_arrays_to_lists(item) for item in data]
@@ -212,9 +199,7 @@ def test_create_filter(load_quadratic_filter_dictionary, messages):
         messages["setup"]["wavedet"]["freq"] = freq
         quadratic_filter_dictionary = create_filter(messages)
         ground_truth = load_quadratic_filter_dictionary(freq)
-        assert compare_dicts_with_arrays(
-            ground_truth, quadratic_filter_dictionary
-        )
+        assert compare_dicts_with_arrays(ground_truth, quadratic_filter_dictionary)
     return
 
 
@@ -263,11 +248,7 @@ def test_filter_segment_of_signal(messages):
                             if param_name == "initial_samp"
                             else initial_samp
                         ),
-                        (
-                            invalid_value
-                            if param_name == "num_samps"
-                            else num_samps
-                        ),
+                        (invalid_value if param_name == "num_samps" else num_samps),
                         (
                             invalid_value
                             if param_name == "segment_boundaries"
@@ -303,14 +284,10 @@ def test_filter_segment_of_signal(messages):
         assert isinstance(
             processed_signal_segment, np.ndarray
         )  # Processed Signal Segment
-        assert isinstance(
-            updated_current_samp, np.ndarray
-        )  # Updated Current Sampling
+        assert isinstance(updated_current_samp, np.ndarray)  # Updated Current Sampling
         # Updated Sample
         assert isinstance(updated_samp, int)
-        assert (
-            segment_boundaries[0] <= updated_samp <= segment_boundaries[1] + 1
-        )
+        assert segment_boundaries[0] <= updated_samp <= segment_boundaries[1] + 1
         # Synchronized Wavelet Matrix
         assert isinstance(synchronized_wavelet_matrix, np.ndarray)
         assert synchronized_wavelet_matrix.shape[1] == 5

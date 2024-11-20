@@ -1,9 +1,7 @@
 import numpy as np
 import pytest
 
-from dictionary_module import (
-    create_locations_dictionary,
-)
+from py_pecg.dictionary_module import create_locations_dictionary
 
 
 def test_create_location_dictionary():
@@ -50,6 +48,7 @@ def test_create_location_dictionary():
         create_locations_dictionary(0)
     with pytest.raises(ValueError):
         create_locations_dictionary(np.array([1, 1]))
+
 
 pytest.main(
     [

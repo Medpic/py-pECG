@@ -1,8 +1,7 @@
 import numpy as np
 import pytest
 from scipy.signal.windows import triang
-
-from py_pecg.utility_module import (
+from utility_module import (
     find_first_peak,
     find_first_zero_crossing,
     find_last_peak,

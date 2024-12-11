@@ -3,8 +3,7 @@ from itertools import product
 
 import numpy as np
 import pytest
-
-from py_pecg.filtering_module import (
+from filtering_module import (
     create_filter,
     filter_segment_of_signal,
     interp,
@@ -14,17 +13,12 @@ from py_pecg.filtering_module import (
 
 
 @pytest.fixture
-def messages():
-    # Standard messages array for the algorithm
-    with open("test_filtering_module_messages.json", "r") as file:
-        messages = json.load(file)
-    return messages
-
-
-@pytest.fixture
 def load_quadratic_filter_array():
     def load_for_frequency(frequency):
-        filename = f"quadratic_filter_array_{frequency}_Hz.npz"
+        filename = (
+            f"./test_filtering_module_data/quadratic_filter_array_"
+            f"{frequency}_Hz.npz"
+        )
         loaded_file = np.load(filename)
         return [loaded_file[f"arr_{i}"] for i in range(len(loaded_file.files))]
 
@@ -34,11 +28,35 @@ def load_quadratic_filter_array():
 @pytest.fixture
 def load_quadratic_filter_dictionary():
     def load_for_frequency(frequency):
-        with open(f"quadratic_filter_dictionary_{frequency}_Hz.json", "r") as file:
+        with open(
+            f"./test_filtering_module_data/quadratic_filter_dictionary_"
+            f"{frequency}_Hz.json",
+            "r",
+        ) as file:
             loaded_file = json.load(file)
-        return loaded_file
+            loaded_quadratic_filter_list = loaded_file["filters"]
+            loaded_quadratic_filter_lengths = loaded_file["lengths"]
+            loaded_filter_decimation_values = loaded_file["d_values"]
+        return (
+            loaded_quadratic_filter_list,
+            loaded_quadratic_filter_lengths,
+            loaded_filter_decimation_values,
+        )
 
     return load_for_frequency
+
+
+@pytest.fixture
+def lists_of_arrays_equal():
+    def _compare(list1, list2):
+        if len(list1) != len(list2):
+            return False
+        for arr1, arr2 in zip(list1, list2):
+            if not np.array_equal(arr1, arr2):
+                return False
+        return True
+
+    return _compare
 
 
 def test_interp():
@@ -70,7 +88,7 @@ def test_interp():
 
     # Invalid Cases
     # Invalid Signal Input
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         interp([], 2, 1, 0.5)
     with pytest.raises(TypeError):
         interp(1, 2, 1, 0.5)
@@ -98,37 +116,29 @@ def test_interp():
     return
 
 
-def test_quadratic_splines_filterbank(load_quadratic_filter_array, messages):
-    def quadratic_splines_subtest(frequency, messages):
-        def lists_of_arrays_equal(list1, list2):
-            if len(list1) != len(list2):
-                return False
-            for arr1, arr2 in zip(list1, list2):
-                if not np.array_equal(arr1, arr2):
-                    return False
-            return True
-
-        # Loading the Filters
-        result, messages = quadratic_splines_filterbank(frequency, messages)
+def test_quadratic_splines_filterbank(
+    load_quadratic_filter_array, lists_of_arrays_equal
+):
+    def quadratic_splines_subtest(frequency, lists_of_arrays_equal):
+        result = quadratic_splines_filterbank(frequency)
         ground_truth = load_quadratic_filter_array(frequency)
 
         # Valid Cases
         assert isinstance(result, list)
         assert len(result) == 5
         assert isinstance(result[0], np.ndarray)
-        assert messages["status"] == 1
         assert lists_of_arrays_equal(ground_truth, result)
 
     for freq in [500, 360, 1000, 200]:
-        quadratic_splines_subtest(freq, messages)
+        quadratic_splines_subtest(freq, lists_of_arrays_equal)
 
     # Invalid Cases
     with pytest.raises(ValueError):
-        quadratic_splines_filterbank(-10, messages)
+        quadratic_splines_filterbank(-10)
     with pytest.raises(ValueError):
-        quadratic_splines_filterbank(123, messages)
+        quadratic_splines_filterbank(123)
     with pytest.raises(ValueError):
-        quadratic_splines_filterbank(np.array([1, 1]), messages)
+        quadratic_splines_filterbank(np.array([1, 1]))
     return
 
 
@@ -170,43 +180,43 @@ def test_wavelet_transform(load_quadratic_filter_array):
     with pytest.raises(ValueError):
         wavelet_transform(np.array([]), quadratic_filter_array_500_Hz)
     with pytest.raises(ValueError):
-        wavelet_transform(np.ones((10, 1)), np.array([]))
+        wavelet_transform(np.ones((10, 1)), 1)
     with pytest.raises(ValueError):
-        wavelet_transform(np.ones((10, 1)), np.zeros((10, 10, 10)))
+        wavelet_transform(np.ones((10, 1)), np.array((10, 10, 10)))
     return
 
 
-def test_create_filter(load_quadratic_filter_dictionary, messages):
-    def compare_dicts_with_arrays(dict1, dict2):
-        def convert_arrays_to_lists(data):
-            if isinstance(data, dict):
-                return {
-                    key: convert_arrays_to_lists(value) for key, value in data.items()
-                }
-            elif isinstance(data, list):
-                return [convert_arrays_to_lists(item) for item in data]
-            elif isinstance(data, np.ndarray):
-                return data.tolist()
-            else:
-                return data
-
-        dict1_converted = convert_arrays_to_lists(dict1)
-        dict2_converted = convert_arrays_to_lists(dict2)
-        return dict1_converted == dict2_converted
-
-    # Comparing output to Ground Truth for each frequency.
+def test_create_filter(load_quadratic_filter_dictionary, lists_of_arrays_equal):
     for freq in [500, 360, 1000, 200]:
-        messages["setup"]["wavedet"]["freq"] = freq
-        quadratic_filter_dictionary = create_filter(messages)
-        ground_truth = load_quadratic_filter_dictionary(freq)
-        assert compare_dicts_with_arrays(ground_truth, quadratic_filter_dictionary)
+        (
+            quadratic_filter_list,
+            quadratic_filter_lengths,
+            filter_decimation_values,
+        ) = create_filter(freq)
+        (
+            loaded_quadratic_filter_list,
+            loaded_quadratic_filter_lengths,
+            loaded_filter_decimation_values,
+        ) = load_quadratic_filter_dictionary(freq)
+        assert lists_of_arrays_equal(
+            loaded_quadratic_filter_list, quadratic_filter_list
+        )
+        assert lists_of_arrays_equal(
+            loaded_quadratic_filter_lengths, quadratic_filter_lengths
+        )
+        assert lists_of_arrays_equal(
+            loaded_filter_decimation_values, filter_decimation_values
+        )
     return
 
 
-def test_filter_segment_of_signal(messages):
+def test_filter_segment_of_signal():
     # Generating Test Data
-    messages["setup"]["wavedet"]["freq"] = 500
-    quadratic_filter_dictionary = create_filter(messages)
+    (
+        quadratic_filter_list,
+        quadratic_filter_lengths,
+        filter_decimation_values,
+    ) = create_filter(500)
     signal_length = 5000
     num_samps = 500
     current_samp = 0
@@ -221,7 +231,14 @@ def test_filter_segment_of_signal(messages):
 
         # Invalid Cases
         test_cases = {
-            "quadratic_filter_dictionary": {},
+            "quadratic_filter_list": [[], np.array([1, 1]), np.array([])],
+            "quadratic_filter_lengths": [
+                -1,
+                [],
+                np.array([1, 1]),
+                np.array([]),
+            ],
+            "filter_decimation_values": [[], np.array([1, 1]), np.array([])],
             "current_samp": [-1, 1.1, np.array([1, 1])],
             "initial_samp": [-1, 1.1, np.array([1, 1])],
             "num_samps": [-1, 1.1, np.array([1, 1])],
@@ -235,8 +252,18 @@ def test_filter_segment_of_signal(messages):
                     filter_segment_of_signal(
                         (
                             invalid_value
-                            if param_name == "quadratic_filter_dictionary"
-                            else quadratic_filter_dictionary
+                            if param_name == "quadratic_filter_list"
+                            else quadratic_filter_list
+                        ),
+                        (
+                            invalid_value
+                            if param_name == "quadratic_filter_lengths"
+                            else quadratic_filter_lengths[-1]
+                        ),
+                        (
+                            invalid_value
+                            if param_name == "filter_decimation_values"
+                            else filter_decimation_values
                         ),
                         (
                             invalid_value
@@ -259,7 +286,6 @@ def test_filter_segment_of_signal(messages):
                             if param_name == "signal_segment"
                             else signal_segment
                         ),
-                        messages,
                     )
 
         # Valid Cases
@@ -272,13 +298,14 @@ def test_filter_segment_of_signal(messages):
             updated_end_samp,
             updated_initial_samp,
         ) = filter_segment_of_signal(
-            quadratic_filter_dictionary,
+            quadratic_filter_list,
+            quadratic_filter_lengths[-1],
+            filter_decimation_values,
             current_samp,
             initial_samp,
             num_samps,
             segment_boundaries,
             signal_segment,
-            messages,
         )
 
         assert isinstance(

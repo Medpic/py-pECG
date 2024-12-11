@@ -1,7 +1,6 @@
 import numpy as np
 import pytest
-
-from py_pecg.dictionary_module import create_locations_dictionary
+from dictionary_module import create_locations_dictionary
 
 
 def test_create_location_dictionary():
@@ -9,25 +8,25 @@ def test_create_location_dictionary():
     maxlength = 30
     result = create_locations_dictionary(maxlength)
     expected_keys = [
-        "Pon",
-        "P",
-        "Poff",
-        "Pprima",
-        "Pscale",
-        "Ptipo",
-        "QRSon",
-        "Q",
-        "R",
-        "Rprima",
-        "S",
-        "QRSoff",
+        "P_Wave_Onset",
+        "P_Wave_Peak",
+        "P_Wave_Offset",
+        "P_Wave_Prime",
+        "P_Wave_Scale",
+        "P_Wave_Type",
+        "QRS_Complex_Onset",
+        "Q_Wave",
+        "R_Peak",
+        "R_Prime",
+        "S_Wave",
+        "QRS_Complex_Offset",
         "qrs",
-        "Ton",
-        "T",
-        "Tprima",
-        "Toff",
-        "Ttipo",
-        "Tscale",
+        "T_Wave_Onset",
+        "T_Wave_Peak",
+        "T_Wave_Prime",
+        "T_Wave_Offset",
+        "T_Wave_Type",
+        "T_Wave_Scale",
         "QRSpa",
         "QRSpp",
         "QRSmainpos",
@@ -38,7 +37,7 @@ def test_create_location_dictionary():
 
     for key in expected_keys:
         assert isinstance(result[key], np.ndarray)
-        assert result[key].shape == (1, maxlength)
+        assert result[key].shape == (maxlength,)
         assert np.all(np.isnan(result[key]))
 
     # Invalid Cases

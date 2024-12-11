@@ -3,7 +3,8 @@ from itertools import product
 
 import numpy as np
 import pytest
-from filtering_module import (
+
+from ..src.py_pecg.filtering_module import (
     create_filter,
     filter_segment_of_signal,
     interp,

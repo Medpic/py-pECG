@@ -3,7 +3,7 @@ import json
 import numpy as np
 import pytest
 
-from ..src.py_pecg.p_wave_module import (
+from py_pecg.p_wave_module import (
     detect_p_wave_features,
     find_p_wave,
     find_secondary_extrema,

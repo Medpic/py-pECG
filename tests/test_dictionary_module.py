@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+
 from py_pecg.dictionary_module import create_locations_dictionary
 
 

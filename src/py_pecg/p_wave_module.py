@@ -1,7 +1,7 @@
 from collections.abc import Iterable
 
 import numpy as np
-from utility_module import (
+from py_pecg.utility_module import (
     find_first_zero_crossing,
     find_modulus_extrema,
     search_offset,
